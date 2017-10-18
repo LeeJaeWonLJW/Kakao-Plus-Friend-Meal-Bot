@@ -24,7 +24,7 @@ AddType application/x-httpd-php .php
 keyboard.php : 초기설정을 담당합니다.
 message.php : 저장된 급식 정보를 불러오고, button에 응답합니다.
 parser.php : 스케쥴러에 등록하여 매일 급식을 파싱하는 스트립트입니다.
-simple_html_dom.php : <a href="http://simplehtmldom.sourceforge.net/">http://simplehtmldom.sourceforge.net/</a>링크의 내용을 급식 내용을 파싱하기 위해 사용하였습니다.
+simple_html_dom.php : <a href="http://simplehtmldom.sourceforge.net/">http://simplehtmldom.sourceforge.net/</a> 링크의 내용을 급식 내용을 파싱하기 위해 사용하였습니다.
 data 폴더 : 파싱한 급식 정보를 저장해두는 공간입니다.
 </pre>
 
