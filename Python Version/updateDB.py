@@ -1,4 +1,5 @@
 import datetime
+import sqlite3
 
 class Query(object):
     def insert(table, columns, values):
@@ -8,39 +9,44 @@ class Query(object):
         return "SELECT name FROM sqlite_master WHERE type='table' AND name='{}';".format(name)
 
     def create(table, columns):
-        return "CREATE TABLE {}({})".format(table, columns)
+        return "CREATE TABLE {}({});".format(table, columns)
 
     def update(table, column, value):
-        return "UPDATE {} SET {}='{}'".format(table, column, value)
+        return "UPDATE {} SET {}='{}';".format(table, column, value)
 
     def select(table, column):
-        return "SELECT {} FROM {}".format(column, table)
+        return "SELECT {} FROM {};".format(column, table)
+
+def fileName(dayN=0):
+    now = datetime.datetime.now()
+    year = now.strftime("%Y")
+    month = "%02d" % (int(now.strftime("%m")))
+    day = "%02d" % (int(now.strftime("%d"))+dayN)
+
+    result = 'a'+year+month+day
+
+    return result
 
 def checkcheck():
-    if datetime.datetime.today().weekday() == 0:
-        conn = sqlite3.connect("db/menu.db")
-        cur = conn.cursor()
+    conn = sqlite3.connect("db/menu.db")
+    cur = conn.cursor()
 
-        cur.execute(Query.select('Qcheck', 'bool'))
+    try:
+        cur.execute(Query.select(fileName(),'*'))
+        rows=cur.fetchall()
+        if not rows:
+            conn.commit()
+    except sqlite3.Error as e:
+        error=e
+    finally:
+        if conn:
+            conn.close()
 
-        rows = cur.fetchall()
-
-        result = str(rows[0])
-
-        if result == 0:
-            import parser
-
-            cur.execute(Query.update('Qcheck', 'bool', 1))
-        else:
-            pass
-
-        conn.close()
-            
-    elif datetime.datetime.today().weekday() == 1:
-        conn = sqlite3.connect("db/menu.db")
-        cur = conn.cursor()
-
-        cur.execute(Query.update('Qcheck', 'bool', 0))
-
-        conn.close()
+    #print("PRINT:"+str(rows[0]))
     
+    if 'error' in locals():
+        import parser
+    else:
+        pass
+
+checkcheck()
